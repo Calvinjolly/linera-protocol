@@ -8,7 +8,7 @@ use linera_base::{
     identifiers::{ChainId, Owner},
 };
 use linera_chain::data_types::{
-    BlockAndRound, BlockProposal, Certificate, HashedValue, LiteCertificate, LiteValue,
+    BlockAndRound, BlockProposal, Certificate, HashedCertificateValue, LiteCertificate, LiteValue,
 };
 use linera_core::{
     data_types::{ChainInfoQuery, ChainInfoResponse, CrossChainRequest},
@@ -299,7 +299,7 @@ impl TryFrom<api::Certificate> for HandleCertificateRequest {
     type Error = GrpcProtoConversionError;
 
     fn try_from(cert_request: api::Certificate) -> Result<Self, Self::Error> {
-        let value: HashedValue = bincode::deserialize(&cert_request.value)?;
+        let value: HashedCertificateValue = bincode::deserialize(&cert_request.value)?;
         ensure!(
             Some(value.inner().chain_id().into()) == cert_request.chain_id,
             GrpcProtoConversionError::InconsistentChainId
@@ -520,7 +520,7 @@ pub mod tests {
         data_types::{Amount, Round, Timestamp},
     };
     use linera_chain::{
-        data_types::{Block, BlockAndRound, BlockExecutionOutcome, HashedValue},
+        data_types::{Block, BlockAndRound, BlockExecutionOutcome, HashedCertificateValue},
         test::make_first_block,
     };
     use linera_core::data_types::ChainInfo;
@@ -676,7 +676,7 @@ pub mod tests {
     pub fn test_certificate() {
         let key_pair = KeyPair::generate();
         let certificate = Certificate::new(
-            HashedValue::new_validated(
+            HashedCertificateValue::new_validated(
                 BlockExecutionOutcome {
                     messages: vec![],
                     message_counts: vec![],
@@ -690,7 +690,7 @@ pub mod tests {
                 Signature::new(&Foo("test".into()), &key_pair),
             )],
         );
-        let blobs = vec![HashedValue::new_validated(
+        let blobs = vec![HashedCertificateValue::new_validated(
             BlockExecutionOutcome {
                 messages: vec![],
                 message_counts: vec![],
@@ -740,7 +740,7 @@ pub mod tests {
             },
             owner: Owner::from(KeyPair::generate().public()),
             signature: Signature::new(&Foo("test".into()), &KeyPair::generate()),
-            blobs: vec![HashedValue::new_confirmed(
+            blobs: vec![HashedCertificateValue::new_confirmed(
                 BlockExecutionOutcome {
                     messages: vec![],
                     message_counts: vec![],
@@ -749,7 +749,7 @@ pub mod tests {
                 .with(get_block()),
             )],
             validated: Some(Certificate::new(
-                HashedValue::new_validated(
+                HashedCertificateValue::new_validated(
                     BlockExecutionOutcome {
                         messages: vec![],
                         message_counts: vec![],
