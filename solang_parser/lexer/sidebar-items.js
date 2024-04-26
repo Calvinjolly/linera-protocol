@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["LexicalError","Token"],"fn":["is_keyword"],"struct":["Lexer"],"type":["Result","Spanned"]};

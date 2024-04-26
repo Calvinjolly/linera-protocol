@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Manages compiling of a `Project`"><title>ethers::solc::project - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="ethers" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.2 (25ef9e3d8 2024-04-09)" data-channel="1.77.2" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../ethers/index.html">ethers</a><span class="version">2.0.14</span></h2></div><h2 class="location"><a href="#">Module project</a></h2><div class="sidebar-elems"><section><ul class="block"><li><a href="#structs">Structs</a></li></ul></section><h2><a href="../index.html">In ethers::solc</a></h2></div></nav><div class="sidebar-resizer"></div>
+    <main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../ethers/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Module <a href="../../index.html">ethers</a>::<wbr><a href="../index.html">solc</a>::<wbr><a class="mod" href="#">project</a><button id="copy-path" title="Copy item path to clipboard"><img src="../../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../../../src/ethers_solc/compile/mod.rs.html#18">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Manages compiling of a <code>Project</code></p>
+<p>The compilation of a project is performed in several steps.</p>
+<p>First the project’s dependency graph <a href="../struct.Graph.html" title="struct ethers::solc::Graph"><code>crate::Graph</code></a> is constructed and all imported
+dependencies are resolved. The graph holds all the relationships between the files and their
+versions. From there the appropriate version set is derived
+<a href="../struct.Graph.html" title="struct ethers::solc::Graph"><code>crate::Graph</code></a> which need to be compiled with different
+<a href="../struct.Solc.html" title="struct ethers::solc::Solc"><code>crate::Solc</code></a> versions.</p>
+<p>At this point we check if we need to compile a source file or whether we can reuse an <em>existing</em>
+<code>Artifact</code>. We don’t to compile if:
+- caching is enabled
+- the file is <strong>not</strong> dirty
+- the artifact for that file exists</p>
+<p>This concludes the preprocessing, and we now have either</p>
+<ul>
+<li>only <code>Source</code> files that need to be compiled</li>
+<li>only cached <code>Artifacts</code>, compilation can be skipped. This is considered an unchanged,
+cached project</li>
+<li>Mix of both <code>Source</code> and <code>Artifacts</code>, only the <code>Source</code> files need to be compiled, the
+<code>Artifacts</code> can be reused.</li>
+</ul>
+<p>The final step is invoking <code>Solc</code> via the standard JSON format.</p>
+<h4 id="notes-on-import-path-resolution"><a class="doc-anchor" href="#notes-on-import-path-resolution">§</a>Notes on <a href="https://docs.soliditylang.org/en/develop/path-resolution.html#path-resolution">Import Path Resolution</a></h4>
+<p>In order to be able to support reproducible builds on all platforms, the Solidity compiler has
+to abstract away the details of the filesystem where source files are stored. Paths used in
+imports must work the same way everywhere while the command-line interface must be able to work
+with platform-specific paths to provide good user experience. This section aims to explain in
+detail how Solidity reconciles these requirements.</p>
+<p>The compiler maintains an internal database (virtual filesystem or VFS for short) where each
+source unit is assigned a unique source unit name which is an opaque and unstructured
+identifier. When you use the import statement, you specify an import path that references a
+source unit name. If the compiler does not find any source unit name matching the import path in
+the VFS, it invokes the callback, which is responsible for obtaining the source code to be
+placed under that name.</p>
+<p>This becomes relevant when dealing with resolved imports</p>
+<h5 id="relative-imports"><a class="doc-anchor" href="#relative-imports">§</a>Relative Imports</h5><div class="example-wrap"><pre class="language-solidity"><code>import &quot;./math/math.sol&quot;;
+import &quot;contracts/tokens/token.sol&quot;;
+</code></pre></div>
+<p>In the above <code>./math/math.sol</code> and <code>contracts/tokens/token.sol</code> are import paths while the
+source unit names they translate to are <code>contracts/math/math.sol</code> and
+<code>contracts/tokens/token.sol</code> respectively.</p>
+<h5 id="direct-imports"><a class="doc-anchor" href="#direct-imports">§</a>Direct Imports</h5>
+<p>An import that does not start with <code>./</code> or <code>../</code> is a direct import.</p>
+<div class="example-wrap"><pre class="language-solidity"><code>import &quot;/project/lib/util.sol&quot;;         // source unit name: /project/lib/util.sol
+import &quot;lib/util.sol&quot;;                  // source unit name: lib/util.sol
+import &quot;@openzeppelin/address.sol&quot;;     // source unit name: @openzeppelin/address.sol
+import &quot;https://example.com/token.sol&quot;; // source unit name: &lt;https://example.com/token.sol&gt;
+</code></pre></div>
+<p>After applying any import remappings the import path simply becomes the source unit name.</p>
+<h6 id="import-remapping"><a class="doc-anchor" href="#import-remapping">§</a>Import Remapping</h6><div class="example-wrap"><pre class="language-solidity"><code>import &quot;github.com/ethereum/dapp-bin/library/math.sol&quot;; // source unit name: dapp-bin/library/math.sol
+</code></pre></div>
+<p>If compiled with <code>solc github.com/ethereum/dapp-bin/=dapp-bin/</code> the compiler will look for the
+file in the VFS under <code>dapp-bin/library/math.sol</code>. If the file is not available there, the
+source unit name will be passed to the Host Filesystem Loader, which will then look in
+<code>/project/dapp-bin/library/iterable_mapping.sol</code></p>
+<h4 id="caching-and-change-detection"><a class="doc-anchor" href="#caching-and-change-detection">§</a>Caching and Change detection</h4>
+<p>If caching is enabled in the <a href="../struct.Project.html" title="struct ethers::solc::Project">Project</a> a cache file will be created upon a successful solc
+build. The <a href="../cache/struct.SolFilesCache.html" title="struct ethers::solc::cache::SolFilesCache">cache file</a> stores metadata for all the files that were
+provided to solc.
+For every file the cache file contains a dedicated <a href="../cache/struct.CacheEntry.html" title="struct ethers::solc::cache::CacheEntry">cache entry</a>,
+which represents the state of the file. A solidity file can contain several contracts, for every
+contract a separate <a href="../trait.Artifact.html" title="trait ethers::solc::Artifact">artifact</a> is emitted. Therefor the entry also tracks all
+artifacts emitted by a file. A solidity file can also be compiled with several solc versions.</p>
+<p>For example in <code>A(&lt;=0.8.10) imports C(&gt;0.4.0)</code> and
+<code>B(0.8.11) imports C(&gt;0.4.0)</code>, both <code>A</code> and <code>B</code> import <code>C</code> but there’s no solc version that’s
+compatible with <code>A</code> and <code>B</code>, in which case two sets are compiled: [<code>A</code>, <code>C</code>] and [<code>B</code>, <code>C</code>].
+This is reflected in the cache entry which tracks the file’s artifacts by version.</p>
+<p>The cache makes it possible to detect changes during recompilation, so that only the changed,
+dirty, files need to be passed to solc. A file will be considered as dirty if:</p>
+<ul>
+<li>the file is new, not included in the existing cache</li>
+<li>the file was modified since the last compiler run, detected by comparing content hashes</li>
+<li>any of the imported files is dirty</li>
+<li>the file’s artifacts don’t exist, were deleted.</li>
+</ul>
+<p>Recompiling a project with cache enabled detects all files that meet these criteria and provides
+solc with only these dirty files instead of the entire source set.</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.ProjectCompiler.html" title="struct ethers::solc::project::ProjectCompiler">ProjectCompiler</a></div></li></ul></section></div></main></body></html>

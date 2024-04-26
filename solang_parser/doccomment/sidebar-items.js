@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DocComment"],"fn":["parse_doccomments"],"struct":["DocCommentTag"]};

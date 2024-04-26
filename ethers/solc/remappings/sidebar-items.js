@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["RemappingError"],"struct":["RelativeRemapping","RelativeRemappingPathBuf","Remapping"]};

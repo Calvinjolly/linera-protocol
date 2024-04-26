@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["YulCaseValue","YulExpression","YulLiteralKind","YulStatement"],"struct":["YulAssignment","YulBlock","YulCase","YulExpressionStatement","YulForLoop","YulFunctionCall","YulFunctionDefinition","YulIdentifier","YulIf","YulKeyword","YulLiteral","YulSwitch","YulTypedName","YulVariableDeclaration"],"type":["YulBreak","YulContinue","YulLeave"]};

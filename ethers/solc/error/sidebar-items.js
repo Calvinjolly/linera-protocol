@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SolcError"],"struct":["SolcIoError"],"type":["Result"]};

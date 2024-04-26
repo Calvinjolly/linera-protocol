@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["ContractSystemApi","MockSystemApi","Resources","ServiceSystemApi","ViewSystemApi"],"trait":["InstanceForMockSystemApi"]};

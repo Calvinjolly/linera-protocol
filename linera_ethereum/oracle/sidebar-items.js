@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["OracleAnswer","OracleError","OracleRequest"],"fn":["evaluate_oracle"],"struct":["EthereumBalanceAnswer","EthereumBalanceRequest","EthereumBlockNumberAnswer","EthereumBlockNumberRequest","EthereumEventsAnswer","EthereumEventsRequest","OracleEndpoints"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["CompactContract","CompactContractBytecode","CompactContractBytecodeCow","CompactContractRef","CompactContractRefSome","CompactContractSome","Contract","ContractBytecode","ContractBytecodeSome"]};

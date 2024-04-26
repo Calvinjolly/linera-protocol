@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["SOLIDITY_FILES_CACHE_FILENAME"],"struct":["CacheEntry","SolFilesCache"]};

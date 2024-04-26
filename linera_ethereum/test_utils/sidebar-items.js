@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_anvil","get_provider","get_test_contract_endpoints"],"mod":["simple_contract"],"struct":["AnvilTest","ContractEndpoints"]};

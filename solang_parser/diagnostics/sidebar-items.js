@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ErrorType","Level"],"struct":["Diagnostic","Note"]};
